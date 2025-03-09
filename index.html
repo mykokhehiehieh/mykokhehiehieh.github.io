@@ -1,10 +1,95 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8" />
-        <title>GG_com2016 is handsome</title>
-    </head>
-    <body>
-        <h1 style="text-align: center; font-size: 200px; font-family: Arial, Helvetica, sans-serif;">GG_com2016 is very handsome</h1>
-    </body>
-</html>
+<head>
+    <title>TARUMT Attendance Calculator</title>
+    <script>
+        function calculateAttendance(){
+            var lectureHours = parseFloat(document.getElementById("lectureHours").value);
+            var tutorialHours = parseFloat(document.getElementById("tutorialHours").value);
+            var practicalHours = parseFloat(document.getElementById("practicalHours").value);
+            var lectureAttend = parseFloat(document.getElementById("lectureAttend").value);
+            var lectureLeave = parseFloat(document.getElementById("lectureLeave").value);
+            var lectureAbsent = parseFloat(document.getElementById("lectureAbsent").value);
+            var tutorialAttend = parseFloat(document.getElementById("tutorialAttend").value);
+            var tutorialLeave = parseFloat(document.getElementById("tutorialLeave").value);
+            var tutorialAbsent = parseFloat(document.getElementById("tutorialAbsent").value);
+            var practicalAttend = parseFloat(document.getElementById("practicalAttend").value);
+            var practicalLeave = parseFloat(document.getElementById("practicalLeave").value);
+            var practicalAbsent = parseFloat(document.getElementById("practicalAbsent").value);
+            var week = parseFloat(document.getElementById("week").value);
+            
+            var attendedHours = ((lectureAttend + lectureLeave) * lectureHours) + ((tutorialAttend + tutorialLeave) * tutorialHours) + ((practicalAttend + practicalLeave) * practicalHours);
+            var totalHours = ((lectureAttend + lectureLeave + lectureAbsent) * lectureHours) + ((tutorialAttend + tutorialLeave + tutorialAbsent) * tutorialHours) + ((practicalAttend + practicalLeave + practicalAbsent) * practicalHours);
+            var attendanceRate = attendedHours / totalHours;
+            document.getElementById("attendanceResult").innerHTML = "Current Attendance: " + (attendanceRate * 100) + "%";
+
+            var absentHours = (lectureAbsent * lectureHours) + (tutorialAbsent * tutorialHours) + (practicalAbsent * practicalHours);
+            var maxHours = (lectureHours + tutorialHours + practicalHours) * week;
+            var maxAttendance = (maxHours - absentHours) / maxHours;
+            document.getElementById("maxAttendanceResult").innerHTML = "Maximum Achieveable Attendance: " + (maxAttendance * 100) + "%";
+
+            var hoursAbsentable = maxHours * 0.2;
+            var hoursBeforeBar = hoursAbsentable - absentHours;
+            document.getElementById("hoursBeforeBar").innerHTML = "Hours Absent Before Barred: " + hoursBeforeBar;
+        }
+    </script>
+</head>
+<body>
+    <h1>Attenadnce Calculator</h1>
+    <p>Warning: This page has like no validations because it wasn't intended for public use (also i am lazy to do them)</p>
+    <form onsubmit="calculateAttendance();return false;">
+        <h2>Hours</h2>
+        <label style="font-size: 12px;">The amount of hours per class</label>
+        <br />
+        Lecture:
+        <input type="number" id="lectureHours" required />
+        Tutorial:
+        <input type="number" id="tutorialHours" required />
+        Practical:
+        <input type="number" id="practicalHours" required />
+        <h2>Classes attended</h2>
+        <label style="font-size: 12px;">The number of classes attended, absent and leave</label>
+        <h3>Practical</h3>
+        Attended:
+        <input type="number" id="practicalAttend" required />
+        Absent:
+        <input type="number" id="practicalAbsent" required />
+        Leave:
+        <input type="number" id="practicalLeave" required />
+        <h3>Tutorial</h3>
+        Attended:
+        <input type="number" id="tutorialAttend" required />
+        Absent:
+        <input type="number" id="tutorialAbsent" required />
+        Leave:
+        <input type="number" id="tutorialLeave" required />
+        <h3>Lecture</h3>
+        Attended:
+        <input type="number" id="lectureAttend" required />
+        Absent:
+        <input type="number" id="lectureAbsent" required />
+        Leave:
+        <input type="number" id="lectureLeave" required />
+        <h2>Week</h2>
+        <label style="font-size: 12px;">Total weeks before bar list releases</label>
+        <br />
+        Total Week:
+        <input type="number" id="week" min="1" required />
+        <br />
+        <button type="submit">Calculate Attendance</button>
+    </form>
+    <p id="results">wow!</p>
+    <div>
+        <h2 id="attendanceResult">Current Attendance</h2>
+    </div>
+    <div>
+        <h2 id="maxAttendanceResult">Maximum Achieveable Attendance</h2>
+    </div>
+    <div>
+        <h2 id="hoursBeforeBar">Hours Absent Before Barred</h2>
+    </div>
+    <footer style="font-size: 10px;">
+        This thing is kind of easy to make but for some reason no one does it so I am making this.
+        <br />
+        Also I am bad at CSS
+    </footer>
+</body>    
