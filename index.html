@@ -1,8 +1,9 @@
 <!DOCTYPE html>
+
 <head>
     <title>TARUMT Attendance Calculator</title>
     <script>
-        function calculateAttendance(){
+        function calculateAttendance() {
             var lectureHours = parseFloat(document.getElementById("lectureHours").value);
             var tutorialHours = parseFloat(document.getElementById("tutorialHours").value);
             var practicalHours = parseFloat(document.getElementById("practicalHours").value);
@@ -16,36 +17,114 @@
             var practicalLeave = parseFloat(document.getElementById("practicalLeave").value);
             var practicalAbsent = parseFloat(document.getElementById("practicalAbsent").value);
             var week = parseFloat(document.getElementById("week").value);
-            
+
             var attendedHours = ((lectureAttend + lectureLeave) * lectureHours) + ((tutorialAttend + tutorialLeave) * tutorialHours) + ((practicalAttend + practicalLeave) * practicalHours);
             var totalHours = ((lectureAttend + lectureLeave + lectureAbsent) * lectureHours) + ((tutorialAttend + tutorialLeave + tutorialAbsent) * tutorialHours) + ((practicalAttend + practicalLeave + practicalAbsent) * practicalHours);
             var attendanceRate = attendedHours / totalHours;
-            document.getElementById("attendanceResult").innerHTML = "Current Attendance: " + (attendanceRate * 100) + "%";
+            document.getElementById("attendanceResult").innerHTML = "Current Attendance: " + (attendanceRate * 100).toFixed(2) + "%";
 
             var absentHours = (lectureAbsent * lectureHours) + (tutorialAbsent * tutorialHours) + (practicalAbsent * practicalHours);
             var maxHours = (lectureHours + tutorialHours + practicalHours) * week;
             var maxAttendance = (maxHours - absentHours) / maxHours;
-            document.getElementById("maxAttendanceResult").innerHTML = "Maximum Achieveable Attendance: " + (maxAttendance * 100) + "%";
+            document.getElementById("maxAttendanceResult").innerHTML = "Maximum Achieveable Attendance: " + (maxAttendance * 100).toFixed(2) + "%";
 
             var hoursAbsentable = maxHours * 0.2;
             var hoursBeforeBar = hoursAbsentable - absentHours;
             document.getElementById("hoursBeforeBar").innerHTML = "Hours Absent Before Barred: " + hoursBeforeBar;
         }
-    </script>
+
+        function updateHours() {
+            var subject = document.getElementById("subject").value;
+            var lectureHours = 0, tutorialHours = 0, practicalHours = 0;
+
+            switch (subject) {
+                case "empty":
+                    lectureHours = 0.0;
+                    tutorialHours = 0.0;
+                    practicalHours = 0.0;
+                    break;
+                case "aws":
+                    lectureHours = 2.0;
+                    tutorialHours = 1.0;
+                    practicalHours = 1.0;
+                    break;
+                case "gui":
+                    lectureHours = 2.0;
+                    tutorialHours = 1.0;
+                    practicalHours = 2.0;
+                    break;
+                case "fcn":
+                    lectureHours = 2.0;
+                    tutorialHours = 1.0;
+                    practicalHours = 2.0;
+                    break;
+                case "math":
+                    lectureHours = 2.0;
+                    tutorialHours = 1.5;
+                    practicalHours = 0.0;
+                    break;
+                case "os":
+                    lectureHours = 2.0;
+                    tutorialHours = 1.0;
+                    practicalHours = 1.0;
+                    break;
+            }
+
+            document.getElementById("lectureHours").value = lectureHours;
+            document.getElementById("tutorialHours").value = tutorialHours;
+            document.getElementById("practicalHours").value = practicalHours;
+        }
+
+        function updateWeeks() {
+            var semestertype = document.getElementById("semestertype").value;
+            var week = 0
+
+            switch (semestertype) {
+                case "empty":
+                    week = 0;
+                    break;
+                case "short":
+                    week = 6;
+                    break;
+                case "long":
+                    week = 13
+                    break;
+            }
+
+            document.getElementById("week").value = week;
+        }
+        
+        </script>
 </head>
+
 <body>
-    <h1>Attenadnce Calculator</h1>
-    <p>Warning: This page has like no validations because it wasn't intended for public use (also i am lazy to do them)</p>
+    <h1>Attendance Calculator</h1>
+    <p>Warning: This page has like no validations because it wasn't intended for public use (also i am lazy to do them)
+    </p>
     <form onsubmit="calculateAttendance();return false;">
+        <h2>Subject</h2>
+        <label style="font-size: 12px;">Select Subject</label>
+        <br />
+        <select name="subject" id="subject" onchange="updateHours()">
+            <option value="empty" id="empty" disabled selected>Select Subject</option>
+            <option value="gui" id="gui">GUI</option>
+            <option value="aws" id="aws">AWS</option>
+            <option value="fcn" id="fcn">FCN</option>
+            <option value="math" id="math">DISCRETE MATH</option>
+            <option value="os" id="os">OS</option>
+        </select>
+        <br />
+
         <h2>Hours</h2>
         <label style="font-size: 12px;">The amount of hours per class</label>
         <br />
         Lecture:
-        <input type="number" id="lectureHours" required />
+        <input type="number" id="lectureHours" step="any" required />
         Tutorial:
-        <input type="number" id="tutorialHours" required />
+        <input type="number" id="tutorialHours" step="any" required />
         Practical:
-        <input type="number" id="practicalHours" required />
+        <input type="number" id="practicalHours" step="any" required />
+
         <h2>Classes attended</h2>
         <label style="font-size: 12px;">The number of classes attended, absent and leave</label>
         <h3>Practical</h3>
@@ -54,22 +133,31 @@
         Absent:
         <input type="number" id="practicalAbsent" required />
         Leave:
-        <input type="number" id="practicalLeave" required />
+        <input type="number" id="practicalLeave" value="0" required />
         <h3>Tutorial</h3>
         Attended:
         <input type="number" id="tutorialAttend" required />
         Absent:
         <input type="number" id="tutorialAbsent" required />
         Leave:
-        <input type="number" id="tutorialLeave" required />
+        <input type="number" id="tutorialLeave" value="0" required />
         <h3>Lecture</h3>
         Attended:
         <input type="number" id="lectureAttend" required />
         Absent:
         <input type="number" id="lectureAbsent" required />
         Leave:
-        <input type="number" id="lectureLeave" required />
+        <input type="number" id="lectureLeave" value="0" required />
+
         <h2>Week</h2>
+        <label style="font-size: 12px;">Semester Type</label>
+
+        <select name="semestertype" id="semestertype" onchange="updateWeeks()">
+            <option value="empty" id="empty" disabled selected>Select Semester Type</option>
+            <option value="long" id="long">Long Sem (14 Weeks)</option>
+            <option value="short" id="short">Short Sem (7 Weeks)</option>
+        </select>
+        <br /><br />
         <label style="font-size: 12px;">Total weeks before bar list releases</label>
         <br />
         Total Week:
@@ -92,4 +180,4 @@
         <br />
         Also I am bad at CSS
     </footer>
-</body>    
+</body>
