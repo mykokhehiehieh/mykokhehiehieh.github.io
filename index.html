@@ -1,7 +1,237 @@
 <!DOCTYPE html>
-
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TARUMT Attendance Calculator</title>
+    <style>
+        :root {
+            --primary-color: #ff6b6b;
+            --secondary-color: #4ecdc4;
+            --accent-color: #ffe66d;
+            --text-color: #2d3436;
+            --background-color: #f7f7f7;
+            --card-background: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+            background-image: 
+                linear-gradient(45deg, rgba(255,107,107,0.1) 25%, transparent 25%),
+                linear-gradient(-45deg, rgba(78,205,196,0.1) 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, rgba(255,230,109,0.1) 75%),
+                linear-gradient(-45deg, transparent 75%, rgba(255,107,107,0.1) 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            border-radius: 3px;
+        }
+
+        .warning {
+            background-color: var(--accent-color);
+            color: var(--text-color);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-left: 4px solid var(--primary-color);
+        }
+
+        form {
+            background: var(--card-background);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: rgba(255,255,255,0.8);
+            border-radius: 10px;
+            border: 1px solid rgba(255,107,107,0.2);
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            position: relative;
+            padding-left: 15px;
+        }
+
+        h2::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 20px;
+            background: var(--secondary-color);
+            border-radius: 2px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+            border: 2px solid rgba(255,107,107,0.2);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(255,107,107,0.2);
+        }
+
+        .input-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .class-type {
+            background: rgba(78,205,196,0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(78,205,196,0.2);
+        }
+
+        button {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .results {
+            background: var(--card-background);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            margin-top: 2rem;
+        }
+
+        .result-item {
+            background: rgba(255,230,109,0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(255,230,109,0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .result-item:hover {
+            transform: translateX(5px);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1rem;
+            color: var(--text-color);
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            form {
+                padding: 1.5rem;
+            }
+
+            .input-group {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .form-group {
+                padding: 0.8rem;
+            }
+
+            .class-type {
+                padding: 1rem;
+            }
+        }
+    </style>
     <script>
         function calculateAttendance() {
             var lectureHours = parseFloat(document.getElementById("lectureHours").value);
@@ -98,86 +328,137 @@
 </head>
 
 <body>
-    <h1>Attendance Calculator</h1>
-    <p>Warning: This page has like no validations because it wasn't intended for public use (also i am lazy to do them)
-    </p>
-    <form onsubmit="calculateAttendance();return false;">
-        <h2>Subject</h2>
-        <label style="font-size: 12px;">Select Subject</label>
-        <br />
-        <select name="subject" id="subject" onchange="updateHours()">
-            <option value="empty" id="empty" disabled selected>Select Subject</option>
-            <option value="gui" id="gui">GUI</option>
-            <option value="aws" id="aws">AWS</option>
-            <option value="fcn" id="fcn">FCN</option>
-            <option value="math" id="math">DISCRETE MATH</option>
-            <option value="os" id="os">OS</option>
-        </select>
-        <br />
+    <div class="container">
+        <h1>✨ TARUMT Attendance Calculator ✨</h1>
+        <div class="warning">
+            ⚠️ Warning: This page has like no validations because it wasn't intended for public use (also i am lazy to do them)
+        </div>
 
-        <h2>Hours</h2>
-        <label style="font-size: 12px;">The amount of hours per class</label>
-        <br />
-        Lecture:
-        <input type="number" id="lectureHours" step="any" required />
-        Tutorial:
-        <input type="number" id="tutorialHours" step="any" required />
-        Practical:
-        <input type="number" id="practicalHours" step="any" required />
+        <form onsubmit="calculateAttendance();return false;">
+            <div class="form-group">
+                <h2>📚 Subject</h2>
+                <label>Select Subject</label>
+                <select name="subject" id="subject" onchange="updateHours()">
+                    <option value="empty" id="empty" disabled selected>Select Subject</option>
+                    <option value="gui" id="gui">GUI</option>
+                    <option value="aws" id="aws">AWS</option>
+                    <option value="fcn" id="fcn">FCN</option>
+                    <option value="math" id="math">DISCRETE MATH</option>
+                    <option value="os" id="os">OS</option>
+                </select>
+            </div>
 
-        <h2>Classes attended</h2>
-        <label style="font-size: 12px;">The number of classes attended, absent and leave</label>
-        <h3>Practical</h3>
-        Attended:
-        <input type="number" id="practicalAttend" required />
-        Absent:
-        <input type="number" id="practicalAbsent" required />
-        Leave:
-        <input type="number" id="practicalLeave" value="0" required />
-        <h3>Tutorial</h3>
-        Attended:
-        <input type="number" id="tutorialAttend" required />
-        Absent:
-        <input type="number" id="tutorialAbsent" required />
-        Leave:
-        <input type="number" id="tutorialLeave" value="0" required />
-        <h3>Lecture</h3>
-        Attended:
-        <input type="number" id="lectureAttend" required />
-        Absent:
-        <input type="number" id="lectureAbsent" required />
-        Leave:
-        <input type="number" id="lectureLeave" value="0" required />
+            <div class="form-group">
+                <h2>⏰ Hours</h2>
+                <label>The amount of hours per class</label>
+                <div class="input-group">
+                    <div>
+                        <label>Lecture:</label>
+                        <input type="number" id="lectureHours" step="any" required />
+                    </div>
+                    <div>
+                        <label>Tutorial:</label>
+                        <input type="number" id="tutorialHours" step="any" required />
+                    </div>
+                    <div>
+                        <label>Practical:</label>
+                        <input type="number" id="practicalHours" step="any" required />
+                    </div>
+                </div>
+            </div>
 
-        <h2>Week</h2>
-        <label style="font-size: 12px;">Semester Type</label>
+            <div class="form-group">
+                <h2>📝 Classes attended</h2>
+                <label>The number of classes attended, absent and leave</label>
+                
+                <div class="class-type">
+                    <h3>🔬 Practical</h3>
+                    <div class="input-group">
+                        <div>
+                            <label>Attended:</label>
+                            <input type="number" id="practicalAttend" required />
+                        </div>
+                        <div>
+                            <label>Absent:</label>
+                            <input type="number" id="practicalAbsent" required />
+                        </div>
+                        <div>
+                            <label>Leave:</label>
+                            <input type="number" id="practicalLeave" value="0" required />
+                        </div>
+                    </div>
+                </div>
 
-        <select name="semestertype" id="semestertype" onchange="updateWeeks()">
-            <option value="empty" id="empty" disabled selected>Select Semester Type</option>
-            <option value="long" id="long">Long Sem (12 Weeks)</option>
-            <option value="short" id="short">Short Sem (5 Weeks)</option>
-        </select>
-        <br /><br />
-        <label style="font-size: 12px;">Total weeks before bar list releases</label>
-        <br />
-        Total Week:
-        <input type="number" id="week" min="1" required />
-        <br />
-        <button type="submit">Calculate Attendance</button>
-    </form>
-    <p id="results">wow!</p>
-    <div>
-        <h2 id="attendanceResult">Current Attendance</h2>
+                <div class="class-type">
+                    <h3>📖 Tutorial</h3>
+                    <div class="input-group">
+                        <div>
+                            <label>Attended:</label>
+                            <input type="number" id="tutorialAttend" required />
+                        </div>
+                        <div>
+                            <label>Absent:</label>
+                            <input type="number" id="tutorialAbsent" required />
+                        </div>
+                        <div>
+                            <label>Leave:</label>
+                            <input type="number" id="tutorialLeave" value="0" required />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="class-type">
+                    <h3>🎓 Lecture</h3>
+                    <div class="input-group">
+                        <div>
+                            <label>Attended:</label>
+                            <input type="number" id="lectureAttend" required />
+                        </div>
+                        <div>
+                            <label>Absent:</label>
+                            <input type="number" id="lectureAbsent" required />
+                        </div>
+                        <div>
+                            <label>Leave:</label>
+                            <input type="number" id="lectureLeave" value="0" required />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <h2>📅 Week</h2>
+                <label>Semester Type</label>
+                <select name="semestertype" id="semestertype" onchange="updateWeeks()">
+                    <option value="empty" id="empty" disabled selected>Select Semester Type</option>
+                    <option value="long" id="long">Long Sem (12 Weeks)</option>
+                    <option value="short" id="short">Short Sem (5 Weeks)</option>
+                </select>
+                
+                <label>Total weeks before bar list releases</label>
+                <input type="number" id="week" min="1" required />
+            </div>
+
+            <button type="submit">✨ Calculate Attendance ✨</button>
+        </form>
+
+        <div class="results">
+            <div class="result-item">
+                <h2 id="attendanceResult">🎯 Current Attendance</h2>
+            </div>
+            <div class="result-item">
+                <h2 id="maxAttendanceResult">📈 Maximum Achieveable Attendance</h2>
+            </div>
+            <div class="result-item">
+                <h2 id="hoursBeforeBar">⏳ Hours Absent Before Barred</h2>
+            </div>
+        </div>
+
+        <footer>
+            This thing is kind of easy to make but for some reason no one does it so I am making this.
+            <br />
+            Also I am bad at CSS
+        </footer>
     </div>
-    <div>
-        <h2 id="maxAttendanceResult">Maximum Achieveable Attendance</h2>
-    </div>
-    <div>
-        <h2 id="hoursBeforeBar">Hours Absent Before Barred</h2>
-    </div>
-    <footer style="font-size: 10px;">
-        This thing is kind of easy to make but for some reason no one does it so I am making this.
-        <br />
-        Also I am bad at CSS
-    </footer>
 </body>
+</html>
